@@ -1,0 +1,6 @@
+.env
+test_query.py
+__pycache__
+test_upload.py
+node_modules
+qdrant_storage

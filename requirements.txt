@@ -1,0 +1,12 @@
+fastapi
+uvicorn==0.23.2
+python-dotenv
+langchain-huggingface
+langchain-openai
+langchain-qdrant==0.2.0
+qdrant-client==1.10.1
+pypdf
+langchain-community
+starlette==0.27.0
+unstructured[docx,pptx,md,xlsx]
+python-docx
