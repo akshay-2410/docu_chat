@@ -4,3 +4,4 @@ __pycache__
 test_upload.py
 node_modules
 qdrant_storage
+uploaded_files
