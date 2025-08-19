@@ -29,7 +29,7 @@ app.add_middleware(
 # --- MODIFIED UPLOAD ENDPOINT (only saves file to disk) ---
 @app.post("/api/upload-document")
 async def upload_document(file: UploadFile = File(...)):
-    upload_dir = "uploaded_files"
+    upload_dir = "uploaded"
     os.makedirs(upload_dir, exist_ok=True)
     file_location = os.path.join(upload_dir, file.filename)
 
@@ -54,11 +54,11 @@ async def prepare_document(query_data: dict):
     if not file_name:
         return {"error": "File name not provided."}, 400
     
-    upload_dir = "uploaded_files"
+    upload_dir = "uploaded"
     file_location = os.path.join(upload_dir, file_name)
     
     if not os.path.exists(file_location):
-        return {"error": f"File '{file_name}' not found in uploaded_files directory."}, 404
+        return {"error": f"File '{file_name}' not found in uploaded directory."}, 404
 
     # Call the ingestion service to process the selected document
     # success, message = ingest_document(file_location)
@@ -71,16 +71,16 @@ async def prepare_document(query_data: dict):
 
 # --- EXISTING ENDPOINTS (rest remain the same) ---
 @app.get("/api/list-files")
-async def list_uploaded_files():
-    upload_dir = "uploaded_files"
+async def list_uploaded():
+    upload_dir = "uploaded"
     if not os.path.exists(upload_dir):
         return {"files": []}
     files = [f for f in os.listdir(upload_dir) if os.path.isfile(os.path.join(upload_dir, f))]
     return {"files": files}
 
 @app.delete("/api/clear-files")
-async def clear_uploaded_files():
-    upload_dir = "uploaded_files"
+async def clear_uploaded():
+    upload_dir = "uploaded"
     try:
         if os.path.exists(upload_dir):
             shutil.rmtree(upload_dir)
