@@ -207,10 +207,14 @@ function App() {
         </button>
 
         {/* Toggle button for File List section - now closes upload section */}
-        <button className="toggle-button" onClick={() => {
-          setShowFileListSection(!showFileListSection);
-          setShowUploadSection(false); // Close upload section when file list is opened
-        }}>
+        <button
+          className="toggle-button"
+          onClick={() => {
+            setShowFileListSection(!showFileListSection);
+            setShowUploadSection(false); // Close upload section when file list is opened
+            fetchUploadedFiles(); // <-- Call this function to refresh the list
+          }}
+        >
           {showFileListSection ? 'Hide Document List' : 'Show Document List'}
         </button>
 

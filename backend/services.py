@@ -183,6 +183,7 @@ def retrieve_context(query: str, file_name: str = None) -> tuple[list, Optional[
 def generate_answer(query: str, context: list) -> tuple[Optional[str], Optional[str]]:
     """
     Generates a final answer using an LLM based on the query and retrieved context.
+    Also returns citations from the document chunks used.
     """
     print(f"Generating answer for query: '{query}'")
     try:
@@ -191,13 +192,21 @@ def generate_answer(query: str, context: list) -> tuple[Optional[str], Optional[
 
         context_text = "\n\n---\n\n".join([doc.page_content for doc in context])
 
+        # Collect citations from context, removing duplicates
+        citations = set()
+        for doc in context:
+            meta = doc.metadata
+            citation = f"- {meta.get('file_name', '')}"
+            if 'page' in meta:
+                citation += f", page {meta['page']}"
+            citations.add(citation)  # Use a set to avoid duplicates
+
         llm = AzureChatOpenAI(
             api_key=os.getenv("AZURE_OPEN_AI_API_KEY"), 
             api_version=os.getenv("AZURE_API_VERSION"),
             azure_endpoint=os.getenv("AZURE_API_ENDPOINT"),
         )
 
-        # --- START OF CHANGED PROMPT TEMPLATE ---
         template = """
 You are an AI assistant who is an expert in analyzing technical documents and resumes.
 Your task is to provide a detailed and helpful response to the user's question based ONLY on the provided context.
@@ -219,8 +228,6 @@ Question:
 
 Answer:
 """
-        # --- END OF CHANGED PROMPT TEMPLATE ---
-
         rag_prompt = PromptTemplate.from_template(template)
 
         rag_chain = (
@@ -231,6 +238,10 @@ Answer:
         )
         
         answer = rag_chain.invoke({"context": context_text, "question": query})
+
+        
+        if citations:
+            answer += "\n\n---\n**Citations:**\n" + "\n".join(sorted(citations))
 
         print("Successfully generated answer.")
         return answer, None
