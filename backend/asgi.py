@@ -4,8 +4,12 @@ import shutil
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 # Import the client and collection name from services.py
-from .services import ingest_document, retrieve_context, generate_answer, COLLECTION_NAME
+from .services import ingest_document, retrieve_context, generate_answer, COLLECTION_NAME, chroma_vector_store
 from typing import Optional # Import Optional
+import chromadb
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Create the FastAPI app instance
 app = FastAPI()
@@ -25,6 +29,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+client_chroma = chromadb.CloudClient(
+    tenant=os.getenv("CHROMA_TENANT"),
+    database=os.getenv("COLLECTION_NAME", "DocuChat"),
+    api_key=os.getenv("CHROMA_API_KEY"),
+    cloud_host=os.getenv("CHROMA_ENDPOINT", "api.trychroma.com"),
+    cloud_port=443,
+    enable_ssl=True
+)
 
 # --- MODIFIED UPLOAD ENDPOINT (only saves file to disk) ---
 @app.post("/api/upload-document")
@@ -85,7 +97,7 @@ async def clear_uploaded():
         if os.path.exists(upload_dir):
             shutil.rmtree(upload_dir)
             os.makedirs(upload_dir)
-        # Optionally: add code to delete Chroma Cloud collection via API if needed
+            client_chroma.delete_collection(COLLECTION_NAME)
         return {"message": "Uploaded files cleared successfully."}
     except Exception as e:
         return {"error": f"Failed to clear: {str(e)}"}, 500
