@@ -4,7 +4,7 @@ A web-based chatbot that answers questions about your uploaded documents using A
 
 ## Features
 
-- Upload PDF, DOCX, PPTX, TXT, or Markdown documents
+- Upload PDF, DOCX, PPTX, TXT, Markdown, and image files
 - Select a document and ask questions about its content
 - Answers are generated using an LLM and are context-aware
 - Answers are rendered with full Markdown formatting (headings, lists, bold, etc.)
@@ -14,15 +14,15 @@ A web-based chatbot that answers questions about your uploaded documents using A
 ## Tech Stack
 
 - **Frontend:** React, Axios, react-markdown
-- **Backend:** FastAPI, LangChain, Qdrant, HuggingFace Embeddings, Azure OpenAI
-- **Vector DB:** Qdrant
+- **Backend:** FastAPI, LangChain, ChromaDB (Cloud), HuggingFace Embeddings, Azure OpenAI
+- **Vector DB:** ChromaDB (Cloud)
 
 ## Setup Instructions
 
 ### 1. Clone the repository
 
 ```sh
-git clone https://github.com/yourusername/document_chat.git
+git clone https://github.com/akshay-2410/docu_chat.git
 cd document_chat
 ```
 
@@ -35,11 +35,12 @@ cd document_chat
   pip install -r requirements.txt
   ```
 
-- Create a `.env` file in `backend/` with your Qdrant and Azure OpenAI credentials:
+- Create a `.env` file in `backend/` with your ChromaDB and Azure OpenAI credentials:
 
   ```
-  QDRANT_HOST=YOUR_QDRANT_URL
-  QDRANT_API_KEY=YOUR_QDRANT_API_KEY
+  CHROMA_TENANT=YOUR_CHROMA_TENANT_ID
+  CHROMA_API_KEY=YOUR_CHROMA_API_KEY
+  CHROMA_ENDPOINT=YOUR_CHROMA_ENDPOINT_URL
   AZURE_OPEN_AI_API_KEY=YOUR_AZURE_OPENAI_KEY
   AZURE_API_VERSION=YOUR_AZURE_API_VERSION
   AZURE_API_ENDPOINT=YOUR_AZURE_API_ENDPOINT
@@ -97,7 +98,7 @@ document_chat/
 
 - **Markdown Rendering:** Answers are rendered using `react-markdown` for full Markdown support.
 - **Loading Animation:** Bot messages show animated dots while waiting for a response.
-- **Document Types:** Supported formats: PDF, DOCX, PPTX, TXT, MD.
+- **Document Types:** Supported formats: PDF, DOCX, PPTX, TXT, MD, images.
 
 ## License
 
@@ -106,6 +107,6 @@ MIT
 ## Credits
 
 - [LangChain](https://github.com/langchain-ai/langchain)
-- [Qdrant](https://qdrant.tech/)
+- [ChromaDB](https://www.trychroma.com/)
 - [Azure OpenAI](https://azure.microsoft.com/en-us/products/cognitive-services/openai-service/)
 - [react-markdown](https://github.com/remarkjs/react-markdown)
