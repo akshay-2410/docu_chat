@@ -4,7 +4,7 @@ import shutil
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 # Import the client and collection name from services.py
-from .services import ingest_document, retrieve_context, generate_answer, qdrant_client, COLLECTION_NAME
+from .services import ingest_document, retrieve_context, generate_answer, COLLECTION_NAME
 from typing import Optional # Import Optional
 
 # Create the FastAPI app instance
@@ -85,10 +85,8 @@ async def clear_uploaded():
         if os.path.exists(upload_dir):
             shutil.rmtree(upload_dir)
             os.makedirs(upload_dir)
-        # It's okay if the collection doesn't exist, delete_collection will handle it.
-        qdrant_client.delete_collection(collection_name=COLLECTION_NAME)
-        #
-        return {"message": "Uploaded files and embeddings cleared successfully."}
+        # Optionally: add code to delete Chroma Cloud collection via API if needed
+        return {"message": "Uploaded files cleared successfully."}
     except Exception as e:
         return {"error": f"Failed to clear: {str(e)}"}, 500
 

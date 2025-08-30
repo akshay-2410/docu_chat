@@ -203,7 +203,7 @@ function App() {
           setShowUploadSection(!showUploadSection);
           setShowFileListSection(false); // Close file list when upload is opened
         }}>
-          {showUploadSection ? 'Hide Upload Section' : 'Show Upload Section'}
+          {showUploadSection ? 'Close' : 'Upload File'}
         </button>
 
         {/* Toggle button for File List section - now closes upload section */}
@@ -215,12 +215,12 @@ function App() {
             fetchUploadedFiles(); // <-- Call this function to refresh the list
           }}
         >
-          {showFileListSection ? 'Hide Document List' : 'Show Document List'}
+          {showFileListSection ? 'Close' : 'Select Documents'}
         </button>
 
         {/* Clear Files Button */}
         <button className="clear-all-button" onClick={handleClearFiles}>
-          Clear All Files & Embeddings
+          Clear All files
         </button>
         {/* Display clearStatus message if it exists */}
         {clearStatus && <div id="clear-status" className="status-message">{clearStatus}</div>}
